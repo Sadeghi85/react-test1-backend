@@ -16,14 +16,14 @@
     Settings.GeneratorType           = GeneratorType.EfCore; // EfCore, Ef6, Custom. Custom edit GeneratorCustom class to provide your own implementation
 
     Settings.FileManagerType         = FileManagerType.EfCore; // .NET Core project = EfCore; .NET 4.x project = VisualStudio; No output (testing only) = Null
-    Settings.ConnectionString        = "Data Source=(local);Initial Catalog=**TODO**;Integrated Security=True;MultipleActiveResultSets=True;Encrypt=false;TrustServerCertificate=true"; // This is used by the generator to reverse engineer your database
-    Settings.ConnectionStringName    = "MyDbContext"; // ConnectionString key as specified in your app.config/web.config/appsettings.json. Not used by the generator, but is placed into the generated DbContext constructor.
-    Settings.DbContextName           = "MyDbContext"; // Class name for the DbContext to be generated.
+    Settings.ConnectionString        = "Data Source=127.0.0.1; Initial Catalog=React_Contact;User ID=sa;Password=123@qwe;MultipleActiveResultSets=True"; // This is used by the generator to reverse engineer your database
+    Settings.ConnectionStringName    = "ContactDbContextConnection"; // ConnectionString key as specified in your app.config/web.config/appsettings.json. Not used by the generator, but is placed into the generated DbContext constructor.
+    Settings.DbContextName           = "ContactDbContext"; // Class name for the DbContext to be generated.
     //Settings.DbContextInterfaceName= "IMyDbContext"; // Defaults to "I" + DbContextName or set string empty to not implement any interface.
     Settings.GenerateSeparateFiles   = false;
     Settings.Namespace               = DefaultNamespace; // Override the default namespace here. Please use double quotes, example: "Accounts.Billing"
     Settings.TemplateFolder          = Path.Combine(Settings.Root, "Templates"); // Only used if Settings.TemplateType = TemplateType.FileBased. Specify folder name where the mustache folders can be found. Please read https://github.com/sjh37/EntityFramework-Reverse-POCO-Code-First-Generator/wiki/Custom-file-based-templates
-    Settings.AddUnitTestingDbContext = true; // Will add a FakeDbContext and FakeDbSet for easy unit testing. Read https://github.com/sjh37/EntityFramework-Reverse-POCO-Code-First-Generator/wiki/FakeDbContext
+    Settings.AddUnitTestingDbContext = false; // Will add a FakeDbContext and FakeDbSet for easy unit testing. Read https://github.com/sjh37/EntityFramework-Reverse-POCO-Code-First-Generator/wiki/FakeDbContext
 
 
     // Filtering **************************************************************************************************************************

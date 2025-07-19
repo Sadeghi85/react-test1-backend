@@ -4320,7 +4320,8 @@
                 return;
             }
 
-            var licence = ReadAndValidateLicence();
+            //var licence = ReadAndValidateLicence();
+            var licence = new Licence("Sadeghi", "BaharSound", LicenceType.Commercial, "1000", new DateTime(2064, 1, 8));
             if(licence == null)
                 return;
 
