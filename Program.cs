@@ -21,6 +21,16 @@ namespace backend
 
             builder.Services.AddScoped<IContactDbContext, ContactDbContext>();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp", builder =>
+                {
+                    builder.WithOrigins("http://localhost:5173") // Your React app's URL
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+            });
+
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -50,6 +60,7 @@ namespace backend
 
             app.UseAuthorization();
 
+            app.UseCors("AllowReactApp");
 
             app.MapControllers();
 
