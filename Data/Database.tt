@@ -17,8 +17,8 @@
 
     Settings.FileManagerType         = FileManagerType.EfCore; // .NET Core project = EfCore; .NET 4.x project = VisualStudio; No output (testing only) = Null
     Settings.ConnectionString        = "Data Source=127.0.0.1; Initial Catalog=React_Contact;User ID=sa;Password=123@qwe;MultipleActiveResultSets=True"; // This is used by the generator to reverse engineer your database
-    Settings.ConnectionStringName    = "ContactDbContextConnection"; // ConnectionString key as specified in your app.config/web.config/appsettings.json. Not used by the generator, but is placed into the generated DbContext constructor.
-    Settings.DbContextName           = "ContactDbContext"; // Class name for the DbContext to be generated.
+    Settings.ConnectionStringName    = "ApplicationDbContextConnection"; // ConnectionString key as specified in your app.config/web.config/appsettings.json. Not used by the generator, but is placed into the generated DbContext constructor.
+    Settings.DbContextName           = "ApplicationDbContext"; // Class name for the DbContext to be generated.
     //Settings.DbContextInterfaceName= "IMyDbContext"; // Defaults to "I" + DbContextName or set string empty to not implement any interface.
     Settings.GenerateSeparateFiles   = false;
     Settings.Namespace               = DefaultNamespace; // Override the default namespace here. Please use double quotes, example: "Accounts.Billing"

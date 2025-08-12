@@ -20,9 +20,10 @@ namespace backend.Data
 {
     #region Database context interface
 
-    public interface IContactDbContext : IDisposable
+    public interface IApplicationDbContext : IDisposable
     {
         DbSet<TblContact> TblContacts { get; set; } // tblContact
+        DbSet<TblRefreshToken> TblRefreshTokens { get; set; } // tblRefreshToken
 
         int SaveChanges();
         int SaveChanges(bool acceptAllChangesOnSuccess);
@@ -73,18 +74,19 @@ namespace backend.Data
 
     #region Database context
 
-    public class ContactDbContext : DbContext, IContactDbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-        public ContactDbContext()
+        public ApplicationDbContext()
         {
         }
 
-        public ContactDbContext(DbContextOptions<ContactDbContext> options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
         public DbSet<TblContact> TblContacts { get; set; } // tblContact
+        public DbSet<TblRefreshToken> TblRefreshTokens { get; set; } // tblRefreshToken
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -108,6 +110,7 @@ namespace backend.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new TblContactConfiguration());
+            modelBuilder.ApplyConfiguration(new TblRefreshTokenConfiguration());
         }
 
     }
@@ -116,11 +119,11 @@ namespace backend.Data
 
     #region Database context factory
 
-    public class ContactDbContextFactory : IDesignTimeDbContextFactory<ContactDbContext>
+    public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
-        public ContactDbContext CreateDbContext(string[] args)
+        public ApplicationDbContext CreateDbContext(string[] args)
         {
-            return new ContactDbContext();
+            return new ApplicationDbContext();
         }
     }
 
@@ -136,6 +139,15 @@ namespace backend.Data
         public string Lastname { get; set; } // Lastname (length: 100)
         public string Email { get; set; } // Email (length: 100)
         public string PhoneNumber { get; set; } // PhoneNumber (length: 100)
+    }
+
+    // tblRefreshToken
+    public class TblRefreshToken
+    {
+        public int Id { get; set; } // ID (Primary key)
+        public string PreferredUsername { get; set; } // PreferredUsername (length: 50)
+        public string RefreshToken { get; set; } // RefreshToken (length: 500)
+        public DateTime Expires { get; set; } // Expires
     }
 
 
@@ -156,6 +168,21 @@ namespace backend.Data
             builder.Property(x => x.Lastname).HasColumnName(@"Lastname").HasColumnType("nvarchar(100)").IsRequired().HasMaxLength(100);
             builder.Property(x => x.Email).HasColumnName(@"Email").HasColumnType("nvarchar(100)").IsRequired().HasMaxLength(100);
             builder.Property(x => x.PhoneNumber).HasColumnName(@"PhoneNumber").HasColumnType("nvarchar(100)").IsRequired().HasMaxLength(100);
+        }
+    }
+
+    // tblRefreshToken
+    public class TblRefreshTokenConfiguration : IEntityTypeConfiguration<TblRefreshToken>
+    {
+        public void Configure(EntityTypeBuilder<TblRefreshToken> builder)
+        {
+            builder.ToTable("tblRefreshToken", "dbo");
+            builder.HasKey(x => x.Id).HasName("PK_tblRefreshToken").IsClustered();
+
+            builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
+            builder.Property(x => x.PreferredUsername).HasColumnName(@"PreferredUsername").HasColumnType("nvarchar(50)").IsRequired().HasMaxLength(50);
+            builder.Property(x => x.RefreshToken).HasColumnName(@"RefreshToken").HasColumnType("nvarchar(500)").IsRequired().HasMaxLength(500);
+            builder.Property(x => x.Expires).HasColumnName(@"Expires").HasColumnType("datetime").IsRequired();
         }
     }
 
