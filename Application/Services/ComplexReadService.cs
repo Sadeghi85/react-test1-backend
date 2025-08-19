@@ -1,7 +1,8 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
-namespace backend.Services
+namespace Application.Services
 {
     #region Dto
 
@@ -11,6 +12,8 @@ namespace backend.Services
         public int OfficeId { get; set; }
         public required string FullName { get; set; }
         public required string FullOfficeTitle { get; set; }
+        public required string[] Permissions { get; set; }
+        public required string[] Roles { get; set; }
 
     }
     public class GetCurrentPermissionsReturnModel
@@ -39,7 +42,7 @@ namespace backend.Services
     public partial class ComplexReadService(IConfiguration configuration)
     {
 
-        public async Task<GetUserInfoReturnModel?> GetUserInfoAsync(string username, int officeId)
+        public async Task<GetUserInfoReturnModel?> GetUserInfoAsync(string username, int officeId, int projectId)
         {
             using var connection = new SqlConnection(configuration.GetConnectionString("ApplicationDbContextConnection"));
 
@@ -68,7 +71,54 @@ namespace backend.Services
 
 ";
 
-            return (await connection.QueryAsync<GetUserInfoReturnModel>(sql, parameters)).FirstOrDefault();
+            var userInfo = (await connection.QueryAsync<GetUserInfoReturnModel>(sql, parameters)).FirstOrDefault();
+
+            if (userInfo != null)
+            {
+                parameters = new DynamicParameters();
+                parameters.Add("@_officeId", officeId);
+                parameters.Add("@_username", username);
+                parameters.Add("@_projectId", projectId);
+
+                sql = @"
+        
+    declare @UserName nvarchar(10) = @_username;
+    declare @OfficeID int = @_officeId;
+    declare @ProjectID int = @_projectId;
+
+
+    SELECT 
+      [FormName]
+    FROM [DB_Core].[dbo].[vwDLProjectPermissionFast]
+    where OfficeID=@OfficeID and (NationalCode = @UserName OR EmployeeNum = @UserName) and ProjectID=@ProjectID
+    group by FormName
+
+";
+                var permissions = (await connection.QueryAsync<string>(sql, parameters)).ToArray();
+
+
+                sql = @"
+        
+    declare @UserName nvarchar(10) = @_username;
+    declare @OfficeID int = @_officeId;
+    declare @ProjectID int = @_projectId;
+
+
+    SELECT 
+      [RoleName]
+    FROM [DB_Core].[dbo].[vwDLProjectPermissionFast]
+    where OfficeID=@OfficeID and (NationalCode = @UserName OR EmployeeNum = @UserName) and ProjectID=@ProjectID
+    group by RoleName
+
+";
+                var roles = (await connection.QueryAsync<string>(sql, parameters)).ToArray();
+
+
+                userInfo.Permissions = permissions;
+                userInfo.Roles = roles;
+            }
+
+            return userInfo;
 
         }
 

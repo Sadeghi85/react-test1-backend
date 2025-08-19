@@ -1,6 +1,6 @@
 ﻿
 
-namespace backend
+namespace Application
 {
     public static class StringExtensions
     {

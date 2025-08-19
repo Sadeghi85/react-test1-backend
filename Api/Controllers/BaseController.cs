@@ -1,10 +1,11 @@
-﻿using backend.Data;
-using backend.Services;
+﻿using Application;
+using Application.Data;
+using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ILogger = Serilog.ILogger;
 
-namespace backend
+namespace Api
 {
     [Route("api/[Controller]")]
     [ApiController]

@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace backend
+namespace Application
 {
     public static class IdentityExtensions
     {

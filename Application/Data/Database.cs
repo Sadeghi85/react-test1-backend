@@ -16,7 +16,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace backend.Data
+namespace Application.Data
 {
     #region Database context interface
 
@@ -92,7 +92,7 @@ namespace backend.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Data Source=127.0.0.1; Initial Catalog=React_Contact;User ID=sa;Password=123@qwe;MultipleActiveResultSets=True");
+                optionsBuilder.UseSqlServer(@"Data Source=172.16.16.50; Initial Catalog=DB_PhoneBook_V2;User ID=usrPhoneBook_V2;Password=123@qwe;MultipleActiveResultSets=False;TrustServerCertificate=True");
             }
         }
 

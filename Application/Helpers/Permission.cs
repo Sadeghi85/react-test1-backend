@@ -1,4 +1,4 @@
-﻿namespace backend
+﻿namespace Application
 {
     public class Permission
     {

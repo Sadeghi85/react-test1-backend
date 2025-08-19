@@ -16,7 +16,7 @@
     Settings.GeneratorType           = GeneratorType.EfCore; // EfCore, Ef6, Custom. Custom edit GeneratorCustom class to provide your own implementation
 
     Settings.FileManagerType         = FileManagerType.EfCore; // .NET Core project = EfCore; .NET 4.x project = VisualStudio; No output (testing only) = Null
-    Settings.ConnectionString        = "Data Source=127.0.0.1; Initial Catalog=React_Contact;User ID=sa;Password=123@qwe;MultipleActiveResultSets=True"; // This is used by the generator to reverse engineer your database
+    Settings.ConnectionString        = "Data Source=172.16.16.50; Initial Catalog=DB_PhoneBook_V2;User ID=usrPhoneBook_V2;Password=123@qwe;MultipleActiveResultSets=False;TrustServerCertificate=True"; // This is used by the generator to reverse engineer your database
     Settings.ConnectionStringName    = "ApplicationDbContextConnection"; // ConnectionString key as specified in your app.config/web.config/appsettings.json. Not used by the generator, but is placed into the generated DbContext constructor.
     Settings.DbContextName           = "ApplicationDbContext"; // Class name for the DbContext to be generated.
     //Settings.DbContextInterfaceName= "IMyDbContext"; // Defaults to "I" + DbContextName or set string empty to not implement any interface.

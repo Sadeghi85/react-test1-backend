@@ -1,5 +1,6 @@
-﻿using backend.Data;
-using backend.Services;
+﻿using Application;
+using Application.Data;
+using Application.Services;
 using Duende.IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,7 @@ using Newtonsoft.Json;
 using System.Security.Claims;
 using ILogger = Serilog.ILogger;
 
-namespace backend.Controllers
+namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

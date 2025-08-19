@@ -5,7 +5,7 @@ using System.Text;
 
 
 #nullable enable
-namespace backend
+namespace Application
 {
     public class ResultDto
     {
