@@ -12,21 +12,23 @@ namespace Application.Services
 
         public async Task<OperationResult<IEnumerable<Contact>>> GetContacts(GetContactsInput getContactsInput)
         {
+            try
+            {
 
-            using var connection = new SqlConnection(configuration.GetConnectionString("ApplicationDbContextConnection"));
+                using var connection = new SqlConnection(configuration.GetConnectionString("ApplicationDbContextConnection"));
 
-            string orderBy = GridHelper.BuildOrderByClause(getContactsInput.Sorting);
+                string orderBy = GridHelper.BuildOrderByClause(getContactsInput.Sorting);
 
-            var sql = string.Empty;
-            var parameters = new DynamicParameters();
-
-
-            parameters = new DynamicParameters();
-            parameters.Add("@_pageIndex", getContactsInput.PageIndex);
-            parameters.Add("@_pageSize", getContactsInput.PageSize);
+                var sql = string.Empty;
+                var parameters = new DynamicParameters();
 
 
-            sql = $@"
+                parameters = new DynamicParameters();
+                parameters.Add("@_pageIndex", getContactsInput.PageIndex);
+                parameters.Add("@_pageSize", getContactsInput.PageSize);
+
+
+                sql = $@"
         
     declare 
 
@@ -90,38 +92,55 @@ namespace Application.Services
 
 ";
 
+                using (var multi = await connection.QueryMultipleAsync(sql, parameters))
+                {
+                    var pagedResults = await multi.ReadAsync<Contact>();
+                    var totalCount = await multi.ReadFirstAsync<int>();
 
 
+                    return OperationResult<IEnumerable<Contact>>.Success(pagedResults, totalCount);
+                }
 
-            using (var multi = await connection.QueryMultipleAsync(sql, parameters))
+            }
+            catch (Exception ex)
             {
-                var pagedResults = await multi.ReadAsync<Contact>();
-                var totalCount = await multi.ReadFirstAsync<int>();
 
-
-                return OperationResult<IEnumerable<Contact>>.Success(pagedResults, totalCount);
+                return OperationResult<IEnumerable<Contact>>.Fail(ex.ToString());
             }
 
+        }
 
+        public async Task<OperationResult<Contact>> CreateContact(Contact input)
+        {
+            try
+            {
+                var contact = new TblContact()
+                {
+                    Email = input.Email,
+                    Firstname = input.Firstname,
+                    Lastname = input.Lastname,
+                    PhoneNumber = input.PhoneNumber,
+                };
 
+                applicationDbContext.TblContacts.Add(contact);
+                await applicationDbContext.SaveChangesAsync();
 
+                var output = new Contact()
+                {
+                    PhoneNumber = contact.PhoneNumber,
+                    Email = contact.Email,
+                    Firstname = contact.Firstname,
+                    Lastname = contact.Lastname,
+                    Id = contact.Id,
+                };
 
+                return OperationResult<Contact>.Success(output, 1);
 
-
-
-
-            //var totalCount = await ctx.TblContacts.CountAsync();
-            //var rows = await ctx.TblContacts.OrderByDescending(x => x.Id).Skip(getContactsInput.PageIndex * getContactsInput.PageSize).Take(getContactsInput.PageSize).ToListAsync();
-
-            //var getContactsOutput = new GetContactsOutput()
-            //{
-            //    Rows = rows,
-            //    TotalCount = totalCount
-            //};
-
-
-            //return getContactsOutput;
-
+            }
+            catch (Exception ex)
+            {
+                return OperationResult<Contact>.Fail(ex.ToString());
+            }
         }
 
     }
